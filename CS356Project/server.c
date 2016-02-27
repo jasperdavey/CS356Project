@@ -1,40 +1,43 @@
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
+#include <time.h>
 
-
-int main()
+int main(int argc, char *argv[])
 {
-    char receivedString[ 1024 ];
+    int listenfd = 0, connfd = 0;
+    struct sockaddr_in serv_addr;
     
-    int serverSocket = socket( AF_INET, SOCK_STREAM, 0 );
+    char sendBuff[1025];
+    time_t ticks;
     
-    struct sockaddr_in serverAddress;
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons( 62742 );
-    serverAddress.sin_addr.s_addr = INADDR_ANY;
+    listenfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&serv_addr, '0', sizeof(serv_addr));
+    memset(sendBuff, '0', sizeof(sendBuff));
     
-    bind( serverSocket, ( struct sockaddr * ) &serverAddress, sizeof( struct sockaddr ) );
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+    serv_addr.sin_port = htons(5000);
     
-    listen( serverSocket, 4 );
+    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
     
-    while ( 1 )
+    listen(listenfd, 10);
+    
+    while(1)
     {
-        struct sockaddr_in clientAddress;
-        socklen_t sin_size = sizeof( struct sockaddr_in );
-        int clientSocket = accept( serverSocket, ( struct sockaddr * ) &clientAddress, &sin_size );
+        connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
         
-        recv( clientSocket, receivedString, 500, 0 );
-        printf( "Server received: %s\n", receivedString );
+        ticks = time(NULL);
+        snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
+        write(connfd, sendBuff, strlen(sendBuff));
         
-        close( clientSocket );
+        close(connfd);
+        sleep(1);
     }
-    
-    return 0;
 }

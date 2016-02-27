@@ -7,41 +7,57 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <errno.h>
+#include <arpa/inet.h>
 
-
-int main()
-
+int main(int argc, char *argv[])
 {
+    int sockfd = 0, n = 0;
+    char recvBuff[1024];
+    struct sockaddr_in serv_addr;
     
-    int sock, bytes_recieved;
-    char send_data[1024],recv_data[1024];
-    struct hostent *host;
-    struct sockaddr_in server_addr;
-    
-    host = gethostbyname("127.0.0.1");
-    
-    sock = socket(AF_INET, SOCK_STREAM,0);
-    
-    server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons( 62742 );
-    server_addr.sin_addr = *((struct in_addr *)host->h_addr);
-    bzero(&(server_addr.sin_zero),8);
-    
-    connect(sock, (struct sockaddr *)&server_addr,sizeof(struct sockaddr));
-    
-    while(1)
+    if(argc != 2)
     {
-        
-        bytes_recieved=recv(sock,recv_data,1024,0);
-        recv_data[bytes_recieved] = '\0';
-        
-        printf("\nRecieved data = %s " , recv_data);
-        printf("\nSend Data :");
-        
-        gets(send_data);
-        
-        send(sock,send_data,strlen(send_data), 0);
-        
+        printf("\n Usage: %s <ip of server> \n",argv[0]);
+        return 1;
     }
+    
+    memset(recvBuff, '0',sizeof(recvBuff));
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    {
+        printf("\n Error : Could not create socket \n");
+        return 1;
+    }
+    
+    memset(&serv_addr, '0', sizeof(serv_addr));
+    
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(5000);
+    
+    if(inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)<=0)
+    {
+        printf("\n inet_pton error occured\n");
+        return 1;
+    }
+    
+    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+        printf("\n Error : Connect Failed \n");
+        return 1;
+    }
+    
+    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+    {
+        recvBuff[n] = 0;
+        if(fputs(recvBuff, stdout) == EOF)
+        {
+            printf("\n Error : Fputs error\n");
+        }
+    }
+    
+    if(n < 0)
+    {
+        printf("\n Read error \n");
+    } 
+    
     return 0;
 }
