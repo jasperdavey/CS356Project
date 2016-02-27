@@ -27,7 +27,6 @@
 		64EEC13A1C8014D2006CBECA /* CS356Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CS356Project; sourceTree = BUILT_PRODUCTS_DIR; };
 		64EEC13D1C8014D2006CBECA /* client.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = client.c; sourceTree = "<group>"; };
 		64EEC1441C810DD0006CBECA /* server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = server.c; sourceTree = "<group>"; };
-		64EEC1451C810DD0006CBECA /* server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = server.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +61,6 @@
 			children = (
 				64EEC13D1C8014D2006CBECA /* client.c */,
 				64EEC1441C810DD0006CBECA /* server.c */,
-				64EEC1451C810DD0006CBECA /* server.h */,
 			);
 			path = CS356Project;
 			sourceTree = "<group>";

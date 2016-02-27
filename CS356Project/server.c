@@ -33,6 +33,11 @@ int main(int argc, char *argv[])
     {
         connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
         
+        if ( connfd )
+        {
+            printf( "Found something\n" );
+        }
+        
         ticks = time(NULL);
         snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
         write(connfd, sendBuff, strlen(sendBuff));
