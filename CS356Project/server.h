@@ -1,15 +1,14 @@
 //
-//  main.c
+//  server.h
 //  CS356Project
 //
 //  Created by Jasper Davey on 2/26/16.
 //  Copyright © 2016 Jasper Davey. All rights reserved.
 //
 
+#ifndef server_h
+#define server_h
+
 #include <stdio.h>
 
-int main(int argc, const char * argv[]) {
-    // insert code here...
-    printf("Hello, World!\n");
-    return 0;
-}
+#endif /* server_h */
