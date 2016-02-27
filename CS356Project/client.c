@@ -23,7 +23,7 @@ int main()
     sock = socket(AF_INET, SOCK_STREAM,0);
     
     server_addr.sin_family = AF_INET;
-    server_addr.sin_port = htons(5000);
+    server_addr.sin_port = htons( 62742 );
     server_addr.sin_addr = *((struct in_addr *)host->h_addr);
     bzero(&(server_addr.sin_zero),8);
     
