@@ -1,66 +1,63 @@
-//
-//  client.c
-//  CS356Project
-//
-//  Created by Jasper Davey on 2/26/16.
-//  Copyright © 2016 Jasper Davey. All rights reserved.
-//
-//  Router 0
-
-#include <stdio.h>
 #include <sys/socket.h>
-#include <arpa/inet.h>
+#include <sys/types.h>
 #include <netinet/in.h>
+#include <netdb.h>
+#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <unistd.h>
+#include <errno.h>
+#include <arpa/inet.h>
 
-int main( int argc, const char * argv[ ] )
+int main(int argc, char *argv[])
 {
+    int sockfd = 0, n = 0;
+    char recvBuff[1024];
+    struct sockaddr_in serv_addr;
     
-    int clientSocket;
-    int distanceVectorRoutingTable[50];
-    static int routingNumber = 0;
-    char* serverIP = "10.80.0.11";
-    int reply;
-    char receiveBuffer[ 1024 ];
-    struct sockaddr_in serverAddress;
-    
-    if ( ( clientSocket = socket( PF_INET, SOCK_STREAM, 0 ) ) < 0 )
+    if(argc != 2)
     {
-        printf( "Error creating socket\n" );
+        printf("\n Usage: %s <ip of server> \n",argv[0]);
         return 1;
     }
     
-    memset( &serverAddress, '0', sizeof( serverAddress ) );
-    
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_port = htons(5000);
-    
-    if ( inet_pton( AF_INET, serverIP, &serverAddress.sin_addr ) <= 0 )
+    memset(recvBuff, '0',sizeof(recvBuff));
+    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
-        printf( "Error connecting with inet_pton\n" );
+        printf("\n Error : Could not create socket \n");
         return 1;
     }
     
-    if ( connect( clientSocket, ( struct sockaddr * ) &serverAddress, sizeof( serverAddress ) ) < 0 )
+    memset(&serv_addr, '0', sizeof(serv_addr));
+    
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(5000);
+    
+    if(inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)<=0)
     {
-        printf( "Failed to connect" );
+        printf("\n inet_pton error occured\n");
         return 1;
     }
-
-    while ( ( reply = read( clientSocket, receiveBuffer, sizeof( receiveBuffer ) - 1 ) ) > 0 )
+    
+    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-        receiveBuffer[ reply ] = 0;
-        if ( fputs( receiveBuffer, stdout ) == EOF )
+        printf("\n Error : Connect Failed \n");
+        return 1;
+    }
+    
+    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+    {
+        recvBuff[n] = 0;
+        if(fputs(recvBuff, stdout) == EOF)
         {
-            printf( "Error with fputs\n" );
+            printf("\n Error : Fputs error\n");
         }
     }
     
-    if ( reply < 0 )
+    if(n < 0)
     {
-        printf( " Read error\n" );
-    }
+        printf("\n Read error \n");
+    } 
     
     return 0;
 }
