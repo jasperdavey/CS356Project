@@ -9,10 +9,13 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
+void displayTable( int [ ] );
+
 int main(int argc, char *argv[])
 {
     int sockfd = 0, n = 0;
-    char recvBuff[1024];
+    int leastCost[ 7 ] = { 0, 1, 1, 2, 3, 3, 7 };
+    char recvBuff[ 1024 ];
     struct sockaddr_in serv_addr;
     
     if(argc != 2)
@@ -21,7 +24,9 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    memset(recvBuff, '0',sizeof(recvBuff));
+    displayTable( leastCost );
+    
+    memset(recvBuff, '0', sizeof(recvBuff));
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Error : Could not create socket \n");
@@ -45,19 +50,40 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    while ( (n = read(sockfd, recvBuff, sizeof(recvBuff)-1)) > 0)
+    if ( send( sockfd, leastCost, sizeof( &leastCost ) / sizeof( int ), 0 ) < 0 )
     {
-        recvBuff[n] = 0;
-        if(fputs(recvBuff, stdout) == EOF)
-        {
-            printf("\n Error : Fputs error\n");
-        }
+        printf( "Sending of Least Cost Table failed\n" );
+        return 1;
     }
     
-    if(n < 0)
+    while ( (n = read( sockfd, recvBuff, sizeof( recvBuff )-1 ) ) > 0)
+    {
+        recvBuff[n] = 0;
+        int receivedLeastCost = scanf( "%s", recvBuff );
+        displayTable( &receivedLeastCost );
+    }
+    
+    if( n < 0 )
     {
         printf("\n Read error \n");
     } 
     
     return 0;
 }
+
+void displayTable( int leastCost[ ] )
+{
+    int arraySize = sizeof( &leastCost ) / sizeof( int );
+    printf( "Destination Router\t\tLink Cost\n" );
+    printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
+    for ( int x = 1; x < arraySize; x += 2 )
+    {
+        printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+    }
+    
+}
+
+
+
+
+

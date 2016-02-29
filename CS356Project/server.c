@@ -13,6 +13,7 @@ int main(int argc, char *argv[])
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
+    int leastCost[ 5 ] = { 1, 0, 1, 2, 1 };
     
     char sendBuff[1025];
     time_t ticks;
@@ -31,16 +32,16 @@ int main(int argc, char *argv[])
     
     while(1)
     {
-        connfd = accept(listenfd, (struct sockaddr*)NULL, NULL);
+        connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
         
         if ( connfd )
         {
-            printf( "Found something\n" );
+            if ( ( write(connfd, leastCost, sizeof( &leastCost ) / sizeof( int ) ) ) < 0 )
+            {
+                printf( "Error sending Least Cost Table\n" );
+                return 1;
+            }
         }
-        
-        ticks = time(NULL);
-        snprintf(sendBuff, sizeof(sendBuff), "%.24s\r\n", ctime(&ticks));
-        write(connfd, sendBuff, strlen(sendBuff));
         
         close(connfd);
         sleep(1);
