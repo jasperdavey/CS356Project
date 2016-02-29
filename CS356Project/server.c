@@ -43,6 +43,8 @@ int main(int argc, char *argv[])
                 printf( "Error sending Least Cost Table\n" );
                 return 1;
             }
+            
+            printf( "Least Cost Table sent\n" );
         }
         
         close(connfd);
