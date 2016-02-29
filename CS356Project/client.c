@@ -9,7 +9,7 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
-void displayTable( int [ ] );
+void displayTable( int[ ] );
 
 int main(int argc, char *argv[])
 {
@@ -64,12 +64,6 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-
-    for ( int i = 0; i < arraySize; i ++ )
-    {
-        printf( "%d\t%d\n", receivedInt[ i ], i );
-    }
-    
     
     
     if( n < 0 )
@@ -82,10 +76,10 @@ int main(int argc, char *argv[])
 
 void displayTable( int leastCost[ ] )
 {
-    int arraySize = sizeof( &leastCost ) / sizeof( int );
+    int arraySize = sizeof( &leastCost );
     printf( "Destination Router\t\tLink Cost\n" );
     printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
-    for ( int x = 1; x < arraySize; x += 2 )
+    for ( int x = 1; x < arraySize - 1; x += 2 )
     {
         printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
     }
