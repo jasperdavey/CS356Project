@@ -44,7 +44,6 @@ int main(int argc, char *argv[])
                 return 1;
             }
             
-            //printf( "Least Cost Table sent\n" );
         }
         
         close(connfd);

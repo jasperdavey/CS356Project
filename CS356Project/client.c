@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 {
     int sockfd = 0, n = 0;
     int leastCost[ 7 ] = { 0, 1, 1, 2, 3, 3, 7 };
-    char recvBuff[ 1024 ];
+    char *recvBuff = ( char * )leastCost;
     struct sockaddr_in serv_addr;
     
     if(argc != 2)
@@ -56,12 +56,21 @@ int main(int argc, char *argv[])
         return 1;
     }
     
-    while ( (n = read( sockfd, recvBuff, sizeof( recvBuff )-1 ) ) > 0)
+    int receivedInt[5];
+    size_t arraySize = sizeof( receivedInt ) / sizeof( int );
+    if ( read( sockfd, receivedInt, arraySize ) < 0 )
     {
-        recvBuff[n] = 0;
-        int receivedLeastCost = scanf( "%s", recvBuff );
-        displayTable( &receivedLeastCost );
+        printf( "Error receiving message from server\n" );
+        return 1;
     }
+    
+
+    for ( int i = 0; i < arraySize; i ++ )
+    {
+        printf( "%d\t%d\n", receivedInt[ i ], i );
+    }
+    
+    
     
     if( n < 0 )
     {
