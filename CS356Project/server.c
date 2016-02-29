@@ -9,11 +9,14 @@
 #include <sys/types.h>
 #include <time.h>
 
+void displayTable( int [ ] );
+
 int main(int argc, char *argv[])
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
     int leastCost[ 5 ] = { 1, 0, 1, 2, 1 };
+    int receivedInt[ 7 ];
     
     char sendBuff[1025];
     time_t ticks;
@@ -36,9 +39,16 @@ int main(int argc, char *argv[])
         
         if ( connfd )
         {
+            if ( ( read( connfd, receivedInt, sizeof( leastCost ) / sizeof( int ) ) ) < 0 )
+            {
+                printf( "Error reading Least Cost Table\n" );
+                return 1;
+            }
+            
+            displayTable( receivedInt );
+            
             printf( "Sending Least Cost Table\n" );
             size_t arraySize = sizeof( leastCost ) / sizeof( leastCost[0] );
-	    printf( "%zu\n", arraySize );
             if ( ( write(connfd, leastCost, arraySize ) ) < 0 )
             {
                 printf( "Error sending Least Cost Table\n" );
@@ -47,8 +57,20 @@ int main(int argc, char *argv[])
             
         }
         
-	printf( "Least Cost Table sent\n" );
+        printf( "Least Cost Table sent\n" );
         close(connfd);
         sleep(1);
     }
+}
+
+void displayTable( int leastCost[ ] )
+{
+    int arraySize = sizeof( &leastCost ) / sizeof( int );
+    printf( "Destination Router\t\tLink Cost\n" );
+    printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
+    for ( int x = 1; x < arraySize; x += 2 )
+    {
+        printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+    }
+    
 }
