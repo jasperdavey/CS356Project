@@ -37,8 +37,9 @@ int main(int argc, char *argv[])
         if ( connfd )
         {
             printf( "Sending Least Cost Table\n" );
-            
-            if ( ( write(connfd, leastCost, sizeof( &leastCost ) / sizeof( int ) ) ) < 0 )
+            size_t arraySize = sizeof( leastCost ) / sizeof( leastCost[0] );
+	    printf( "%zu\n", arraySize );
+            if ( ( write(connfd, leastCost, arraySize ) ) < 0 )
             {
                 printf( "Error sending Least Cost Table\n" );
                 return 1;
@@ -46,6 +47,7 @@ int main(int argc, char *argv[])
             
         }
         
+	printf( "Least Cost Table sent\n" );
         close(connfd);
         sleep(1);
     }
