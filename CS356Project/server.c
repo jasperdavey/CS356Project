@@ -1,3 +1,8 @@
+/*  server.c
+ *  CS 356 Stage One
+ *  Author: Jasper Davey
+ */
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -9,60 +14,55 @@
 #include <sys/types.h>
 #include <time.h>
 
-void displayTable( int [ ] );
+void displayTable( int [ ], size_t );
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[ ] )
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
-    int leastCost[ 5 ] = { 1, 0, 1, 2, 1 };
+    static int leastCost[ 5 ] = { 1, 0, 1, 2, 1 };
     int receivedInt[ 7 ];
     
-    char sendBuff[1025];
-    
-    listenfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&serv_addr, '0', sizeof(serv_addr));
-    memset(sendBuff, '0', sizeof(sendBuff));
+    listenfd = socket( AF_INET, SOCK_STREAM, 0 );
+    memset(&serv_addr, '0', sizeof( serv_addr ) );
     
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-    serv_addr.sin_port = htons(5000);
+    serv_addr.sin_addr.s_addr = htonl( INADDR_ANY );
+    serv_addr.sin_port = htons( 5000 );
     
-    bind(listenfd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
+    bind( listenfd, (struct sockaddr* )&serv_addr, sizeof( serv_addr ) );
     
-    listen(listenfd, 10);
+    listen( listenfd, 10 );
     
-    while(1)
+    while( 1 )
     {
-        connfd = accept(listenfd, (struct sockaddr*) NULL, NULL);
+        connfd = accept( listenfd, ( struct sockaddr* ) NULL, NULL );
         
         if ( connfd )
         {
 
-            if ( ( read( connfd, receivedInt, sizeof( leastCost ) * sizeof( int ) ) ) < 0 )
+            if ( ( read( connfd, receivedInt, sizeof( receivedInt ) * sizeof( int ) ) ) < 0 )
             {
                 printf( "Error reading Least Cost Table\n" );
                 return 1;
             }
             
             int receivedArray[ 7 ];
-            for ( int x = 0; x < sizeof( receivedInt ) * sizeof( int ); x++ )
+            for ( int x = 0; x < sizeof( receivedArray ) / sizeof( int ); x++ )
             {
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
             }
             
-            printf( "Size of receivedArray: %lu\n", sizeof( receivedArray ) );
-            
-            displayTable( receivedArray );
+            displayTable( receivedArray, sizeof( receivedArray ) );
             
             int sendLeastCost[ 5 ];
-            for ( int x = 0; x < sizeof( leastCost ) * sizeof( int ); x++ )
+            for ( int x = 0; x < sizeof( leastCost ) / sizeof( int ); x++ )
             {
                 sendLeastCost[ x ] = htonl( leastCost[ x ] );
             }
             
             printf( "Sending Least Cost Table\n" );
-            size_t arraySize = sizeof( sendLeastCost ) * sizeof( sendLeastCost[0] );
+            size_t arraySize = sizeof( sendLeastCost ) * sizeof( sendLeastCost[ 0 ] );
             if ( ( write(connfd, sendLeastCost, arraySize ) ) < 0 )
             {
                 printf( "Error sending Least Cost Table\n" );
@@ -72,17 +72,16 @@ int main(int argc, char *argv[])
         }
         
         printf( "Least Cost Table sent\n" );
-        close(connfd);
-        sleep(1);
+        close( connfd );
+        sleep( 1 );
     }
 }
 
-void displayTable( int leastCost[ ] )
+void displayTable( int leastCost[ ], size_t arraySize  )
 {
-    int arraySize = sizeof( &leastCost );
     printf( "Destination Router\t\tLink Cost\n" );
     printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
-    for ( int x = 1; x < arraySize - 1; x += 2 )
+    for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
     {
         printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
     }

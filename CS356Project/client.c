@@ -1,3 +1,8 @@
+/*  client.c
+ *  CS 356 Stage One
+ *  Author: Jasper Davey
+ */
+
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -9,53 +14,52 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
-void displayTable( int[ ] );
+void displayTable( int[ ], size_t );
 
-int main(int argc, char *argv[])
+int main( int argc, char *argv[ ] )
 {
     int sockfd = 0, n = 0;
-    int leastCost[ 7 ] = { 0, 1, 1, 2, 3, 3, 7 };
-    char *recvBuff = ( char * )leastCost;
+    static int leastCost[ 7 ] = { 0, 1, 1, 2, 3, 3, 7 };
     struct sockaddr_in serv_addr;
     
-    if(argc != 2)
+    if ( argc != 2 )
     {
-        printf("\n Usage: %s <ip of server> \n",argv[0]);
+        printf( "\n Usage: %s <ip of server> \n", argv[ 0 ] );
         return 1;
     }
     
-    displayTable( leastCost );
+    displayTable( leastCost, sizeof( leastCost ) );
     
-    if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+    if ( ( sockfd = socket( AF_INET, SOCK_STREAM, 0 ) ) < 0 )
     {
-        printf("\n Error : Could not create socket \n");
+        printf( "\n Error : Could not create socket \n" );
         return 1;
     }
     
-    memset(&serv_addr, '0', sizeof(serv_addr));
+    memset( &serv_addr, '0', sizeof( serv_addr ) );
     
     serv_addr.sin_family = AF_INET;
-    serv_addr.sin_port = htons(5000);
+    serv_addr.sin_port = htons( 5000 );
     
-    if(inet_pton(AF_INET, argv[1], &serv_addr.sin_addr)<=0)
+    if ( inet_pton( AF_INET, argv[ 1 ], &serv_addr.sin_addr ) <= 0 )
     {
-        printf("\n inet_pton error occured\n");
+        printf( "\n inet_pton error occured\n" );
         return 1;
     }
     
-    if( connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    if ( connect( sockfd, ( struct sockaddr * )&serv_addr, sizeof( serv_addr ) ) < 0 )
     {
-        printf("\n Error : Connect Failed \n");
+        printf( "\n Error : Connect Failed \n" );
         return 1;
     }
     
     int sendLeastCost[ 7 ];
-    for ( int x = 0; x < sizeof( &leastCost ) * sizeof( int ); x++ )
+    for ( int x = 0; x < sizeof( sendLeastCost ) / sizeof( int ); x++ )
     {
         sendLeastCost[ x ] = htonl( leastCost[ x ] );
     }
     
-    if ( send( sockfd, sendLeastCost, sizeof( &sendLeastCost ) * sizeof( int ), 0 ) < 0 )
+    if ( send( sockfd, sendLeastCost, 7 * sizeof( int ), 0 ) < 0 )
     {
         printf( "Sending of Least Cost Table failed\n" );
         return 1;
@@ -63,23 +67,20 @@ int main(int argc, char *argv[])
     
     int serverResponse[ 5 ];
     int receivedInt[ 5 ];
-    if ( ( read( sockfd, serverResponse, sizeof( leastCost ) * sizeof( int ) ) )  < 0 )
+    if ( ( read( sockfd, serverResponse, 5 * sizeof( int ) ) )  < 0 )
     {
         printf( "Error receiving message from server\n" );
         return 1;
     }
     
-    printf( "Size of serverResponse: %lu\n", sizeof( serverResponse ) );
-    printf( "Size of ReceivedInt: %lu\n", sizeof( receivedInt ) );
-    
-    for ( int x = 0; x < sizeof( serverResponse ) * sizeof( int ); x ++ )
+    for ( int x = 0; x < sizeof( serverResponse ) / 4; x ++ )
     {
         receivedInt[ x ] = ntohl( serverResponse[ x ] );
     }
     
-    displayTable( receivedInt );
+    displayTable( receivedInt, sizeof( receivedInt ) );
     
-    if( n < 0 )
+    if ( n < 0 )
     {
         printf("\n Read error \n");
     } 
@@ -87,19 +88,14 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-void displayTable( int leastCost[ ] )
+void displayTable( int leastCost[ ], size_t arraySize )
 {
-    int arraySize = sizeof( &leastCost );
+
     printf( "Destination Router\t\tLink Cost\n" );
     printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
-    for ( int x = 1; x < arraySize - 1; x += 2 )
+    for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
     {
         printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
     }
     
 }
-
-
-
-
-
