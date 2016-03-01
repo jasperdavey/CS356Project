@@ -19,7 +19,6 @@ int main(int argc, char *argv[])
     int receivedInt[ 7 ];
     
     char sendBuff[1025];
-    time_t ticks;
     
     listenfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&serv_addr, '0', sizeof(serv_addr));
@@ -45,11 +44,23 @@ int main(int argc, char *argv[])
                 return 1;
             }
             
-            displayTable( receivedInt );
+            int receivedArray[ 7 ];
+            for ( int x = 0; x < sizeof( receivedInt ) / sizeof( int ); x++ )
+            {
+                receivedArray[ x ] = ntohl( receivedInt[ x ] );
+            }
+            
+            displayTable( receivedArray );
+            
+            int sendLeastCost[ 5 ];
+            for ( int x = 0; x < sizeof( leastCost ) / sizeof( int ); x++ )
+            {
+                sendLeastCost[ x ] = htonl( leastCost[ x ] );
+            }
             
             printf( "Sending Least Cost Table\n" );
-            size_t arraySize = sizeof( leastCost ) / sizeof( leastCost[0] );
-            if ( ( write(connfd, leastCost, arraySize ) ) < 0 )
+            size_t arraySize = sizeof( sendLeastCost ) / sizeof( sendLeastCost[0] );
+            if ( ( write(connfd, sendLeastCost, arraySize ) ) < 0 )
             {
                 printf( "Error sending Least Cost Table\n" );
                 return 1;
