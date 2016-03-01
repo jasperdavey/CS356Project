@@ -51,6 +51,8 @@ int main(int argc, char *argv[])
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
             }
             
+            printf( "Size of receivedArray: %lu\n", sizeof( receivedArray ) );
+            
             displayTable( receivedArray );
             
             int sendLeastCost[ 5 ];

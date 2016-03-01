@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
     
     displayTable( leastCost );
     
-    memset(recvBuff, '0', sizeof(recvBuff));
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
     {
         printf("\n Error : Could not create socket \n");
@@ -64,12 +63,14 @@ int main(int argc, char *argv[])
     
     int serverResponse[ 5 ];
     int receivedInt[ 5 ];
-    size_t arraySize = sizeof( serverResponse ) * sizeof( int );
-    if ( read( sockfd, serverResponse, arraySize ) < 0 )
+    if ( ( read( sockfd, serverResponse, sizeof( leastCost ) * sizeof( int ) ) )  < 0 )
     {
         printf( "Error receiving message from server\n" );
         return 1;
     }
+    
+    printf( "Size of serverResponse: %lu\n", sizeof( serverResponse ) );
+    printf( "Size of ReceivedInt: %lu\n", sizeof( receivedInt ) );
     
     for ( int x = 0; x < sizeof( serverResponse ) * sizeof( int ); x ++ )
     {
@@ -77,13 +78,6 @@ int main(int argc, char *argv[])
     }
     
     displayTable( receivedInt );
-    
-    for ( int x = 0; x < sizeof( &receivedInt ); x ++ )
-    {
-        printf( "%d\n", receivedInt[ x ] );
-    }
-    
-    
     
     if( n < 0 )
     {
