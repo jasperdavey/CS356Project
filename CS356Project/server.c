@@ -38,19 +38,38 @@ int main(int argc, char *argv[])
         
         if ( connfd )
         {
+            /*
             if ( ( read( connfd, receivedInt, sizeof( leastCost ) / sizeof( int ) ) ) < 0 )
             {
                 printf( "Error reading Least Cost Table\n" );
                 return 1;
             }
+             */
             
+            /*
             int receivedArray[ 7 ];
             for ( int x = 0; x < sizeof( receivedInt ) / sizeof( int ); x++ )
             {
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
             }
+             */
             
-            displayTable( receivedArray );
+            char *buffer = (char * ) leastCost;
+            size_t remaining = sizeof( int ) * 7;
+            while ( remaining )
+            {
+                ssize_t received = read( connfd, buffer, remaining );
+                remaining -= received;
+                buffer += received;
+            }
+            
+            int test[ 7 ];
+            for ( int x = 0; x < sizeof( buffer ); x++ )
+            {
+                test[ x ] = ( int )buffer[ x ];
+            }
+            
+            displayTable( test );
             
             int sendLeastCost[ 5 ];
             for ( int x = 0; x < sizeof( leastCost ) / sizeof( int ); x++ )
