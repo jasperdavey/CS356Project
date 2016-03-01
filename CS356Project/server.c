@@ -53,8 +53,9 @@ int main(int argc, char *argv[])
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
             }
              */
+            int randomArray[ 7 ];
             
-            char *buffer = (char * ) leastCost;
+            char *buffer = (char * ) randomArray;
             size_t remaining = sizeof( int ) * 7;
             while ( remaining )
             {
