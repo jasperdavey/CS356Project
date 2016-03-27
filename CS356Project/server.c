@@ -21,7 +21,7 @@ int main( int argc, char *argv[ ] )
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
-    static int leastCost[ 100 ] = { 1, 0, 1, 2, 1 };
+    static int leastCost[ 7 ] = { 1, 0, 1, 2, 1 };
     int receivedInt[ 7 ];
     
     listenfd = socket( AF_INET, SOCK_STREAM, 0 );

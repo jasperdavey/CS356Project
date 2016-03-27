@@ -20,7 +20,7 @@ void updateTable( int [ ], int [ ], size_t, size_t );
 int main( int argc, char *argv[ ] )
 {
     int sockfd = 0, n = 0;
-    static int leastCost[ 100 ] = { 0, 1, 1, 2, 3, 3, 7 };
+    static int leastCost[ 7 ] = { 0, 1, 1, 2, 3, 3, 7 };
     struct sockaddr_in serv_addr;
     
     if ( argc != 2 )
