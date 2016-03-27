@@ -15,12 +15,13 @@
 #include <time.h>
 
 void displayTable( int [ ], size_t );
+void updateTable( int [ ], int [ ], size_t, size_t );
 
 int main( int argc, char *argv[ ] )
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
-    static int leastCost[ 5 ] = { 1, 0, 1, 2, 1 };
+    static int leastCost[ 100 ] = { 1, 0, 1, 2, 1 };
     int receivedInt[ 7 ];
     
     listenfd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -54,6 +55,8 @@ int main( int argc, char *argv[ ] )
             }
             
             displayTable( receivedArray, sizeof( receivedArray ) );
+            updateTable( leastCost, receivedArray, sizeof( leastCost ), sizeof( receivedArray ) );
+            displayTable( leastCost, sizeof( leastCost ) );
             
             int sendLeastCost[ 5 ];
             for ( int x = 0; x < sizeof( leastCost ) / sizeof( int ); x++ )
@@ -79,11 +82,30 @@ int main( int argc, char *argv[ ] )
 
 void displayTable( int leastCost[ ], size_t arraySize  )
 {
-    printf( "Destination Router\t\tLink Cost\n" );
+    printf( "Router 1 Destination Router\t\tLink Cost\n" );
     printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
     for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
     {
         printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
     }
     
+}
+
+void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSize, size_t receivedLeastCostSize )
+{
+    printf( "Updating Router 1 Least Cost Table\n" );
+    
+    for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 2 )
+    {
+        for ( int y = 1; y < ( leastCostSize / sizeof( int ) ) - 1; y += 2 )
+        {
+            if ( leastCost[ y ] == receivedLeastCost[ x ] )
+            {
+                if ( receivedLeastCost[ x + 1 ] > leastCost[ y + 1 ] )
+                {
+                    leastCost[ y + 1 ] = receivedLeastCost[ x + 1 ];
+                }
+            }
+        }
+    }
 }
