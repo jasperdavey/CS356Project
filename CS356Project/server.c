@@ -22,7 +22,7 @@ int main( int argc, char *argv[ ] )
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
     static int leastCost[ 10 ] = { 1, 0, 2, 1, 2, 0, 1, 3, 665, 665 };
-    int receivedInt[ 7 ];
+    int receivedInt[ 10 ];
     
     listenfd = socket( AF_INET, SOCK_STREAM, 0 );
     memset(&serv_addr, '0', sizeof( serv_addr ) );
@@ -48,7 +48,7 @@ int main( int argc, char *argv[ ] )
                 return 1;
             }
             
-            int receivedArray[ 7 ];
+            int receivedArray[ 10 ];
             for ( int x = 0; x < sizeof( receivedArray ) / sizeof( int ); x++ )
             {
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
@@ -62,7 +62,7 @@ int main( int argc, char *argv[ ] )
             printf( "Displaying updated initial least cost table\n" );
             displayTable( leastCost, sizeof( leastCost ) );
             
-            int sendLeastCost[ 5 ];
+            int sendLeastCost[ 10 ];
             for ( int x = 0; x < sizeof( leastCost ) / sizeof( int ); x++ )
             {
                 sendLeastCost[ x ] = htonl( leastCost[ x ] );

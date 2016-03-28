@@ -54,7 +54,7 @@ int main( int argc, char *argv[ ] )
         return 1;
     }
     
-    int sendLeastCost[ 7 ];
+    int sendLeastCost[ 10 ];
     for ( int x = 0; x < sizeof( sendLeastCost ) / sizeof( int ); x++ )
     {
         sendLeastCost[ x ] = htonl( leastCost[ x ] );
@@ -66,8 +66,8 @@ int main( int argc, char *argv[ ] )
         return 1;
     }
     
-    int serverResponse[ 5 ];
-    int receivedInt[ 5 ];
+    int serverResponse[ 10 ];
+    int receivedInt[ 10 ];
     if ( ( read( sockfd, serverResponse, 5 * sizeof( int ) ) )  < 0 )
     {
         printf( "Error receiving message from server\n" );
