@@ -99,16 +99,16 @@ void displayTable( int leastCost[ ], size_t arraySize )
 {
 
     printf( "Router 0 Destination Router\t\tInterface\t\tLink Cost\n" );
-    printf( "%d\t\t\t\t\tLocal\t\t0\n", leastCost[ 0 ] );
+    printf( "%d\t\t\t\t\tLocal\t\t\t0\n", leastCost[ 0 ] );
     for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 3 )
     {
-        if ( leastCost[ x + 1 ] == 665 )
+        if ( leastCost[ x + 2 ] == 665 )
         {
-            printf( "%d\t\t\t\t\tunknown\t\tunknown\n", leastCost[ x ] );
+            printf( "%d\t\t\t\t\tunknown\t\t\tunknown\n", leastCost[ x ] );
         }
         else
         {
-            printf( "%d\t\t\t\t\t%d\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ], leastCost[ x + 2 ] );
+            printf( "%d\t\t\t\t\t%d\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ], leastCost[ x + 2 ] );
         }
     }
     
