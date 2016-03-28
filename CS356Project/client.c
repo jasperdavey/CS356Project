@@ -60,7 +60,7 @@ int main( int argc, char *argv[ ] )
         sendLeastCost[ x ] = htonl( leastCost[ x ] );
     }
     
-    if ( send( sockfd, sendLeastCost, 7 * sizeof( int ), 0 ) < 0 )
+    if ( send( sockfd, sendLeastCost, sizeof( sendLeastCost ) * sizeof( int ), 0 ) < 0 )
     {
         printf( "Sending of Least Cost Table failed\n" );
         return 1;
@@ -68,13 +68,13 @@ int main( int argc, char *argv[ ] )
     
     int serverResponse[ 10 ];
     int receivedInt[ 10 ];
-    if ( ( read( sockfd, serverResponse, 5 * sizeof( int ) ) )  < 0 )
+    if ( ( read( sockfd, serverResponse, sizeof( receivedInt ) * sizeof( int ) ) )  < 0 )
     {
         printf( "Error receiving message from server\n" );
         return 1;
     }
     
-    for ( int x = 0; x < sizeof( serverResponse ) / 4; x ++ )
+    for ( int x = 0; x < sizeof( serverResponse ) / sizeof( int ); x ++ )
     {
         receivedInt[ x ] = ntohl( serverResponse[ x ] );
     }
