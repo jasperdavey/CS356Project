@@ -107,14 +107,15 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
 {
     printf( "Updating Router 1 Least Cost Table\n" );
     int interfaceToRouter = 0;
+    int costOfRouter = 0;
     
     // Find interface to received router
     for ( int z = 1; z < ( leastCostSize / sizeof( int ) ) - 1 ; z+= 3 )
     {
         if ( leastCost[ z ] == receivedLeastCost[ 0 ] )
         {
-            printf( "Updated interface\n" );
             interfaceToRouter = leastCost[ z + 1 ];
+            costOfRouter = leastCost[ z + 2 ];
             break;
         }
     }
@@ -128,9 +129,9 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
         {
             if ( leastCost[ y ] == receivedLeastCost[ x ] )
             {
-                if ( receivedLeastCost[ x + 2 ] < leastCost[ y + 2 ] )
+                if ( ( receivedLeastCost[ x + 2 ] + costOfRouter ) < leastCost[ y + 2 ] )
                 {
-                    leastCost[ y + 2 ] = receivedLeastCost[ x + 2 ];
+                    leastCost[ y + 2 ] = receivedLeastCost[ x + 2 ] + costOfRouter;
                     leastCost[ y + 1 ] = interfaceToRouter;
                 }
             }
