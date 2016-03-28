@@ -115,7 +115,9 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
                 if ( receivedLeastCost[ x + 1 ] > leastCost[ y + 1 ] )
                 {
                     printf( "Here\n" );
+                    printf( "Before assignment: leastCost=%d receivedLeastCost=%d\n", leastCost[ y + 1 ], receivedLeastCost[ x + 1 ] );
                     leastCost[ y + 1 ] = receivedLeastCost[ x + 1 ];
+                    printf( "After assignment: leastCost=%d\n", leastCost[ y + 1 ] );
                 }
             }
         }
