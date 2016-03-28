@@ -79,8 +79,12 @@ int main( int argc, char *argv[ ] )
         receivedInt[ x ] = ntohl( serverResponse[ x ] );
     }
     
-    //displayTable( receivedInt, sizeof( receivedInt ) );
+    printf( "Displaying initial least cost table\n" );
+    displayTable( receivedInt, sizeof( receivedInt ) );
+    
     updateTable( leastCost, receivedInt, sizeof( leastCost ), sizeof( receivedInt ) );
+    
+    printf( "Displaying updated initial least cost table\n" );
     displayTable( leastCost, sizeof( leastCost ) );
     
     if ( n < 0 )
@@ -112,7 +116,7 @@ void displayTable( int leastCost[ ], size_t arraySize )
 
 void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSize, size_t receivedLeastCostSize )
 {
-    printf( "Updating Router 1 Least Cost Table\n" );
+    printf( "Updating Router 0 Least Cost Table\n" );
     
     for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 2 )
     {
@@ -127,6 +131,4 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
             }
         }
     }
-    
-    
 }
