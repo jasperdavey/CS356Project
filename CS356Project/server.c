@@ -113,6 +113,7 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
     {
         if ( leastCost[ z ] == receivedLeastCost[ 0 ] )
         {
+            printf( "Updated interface\n" );
             interfaceToRouter = leastCost[ z + 1 ];
             break;
         }
@@ -126,6 +127,7 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
             {
                 if ( receivedLeastCost[ x + 2 ] < leastCost[ y + 2 ] )
                 {
+                    printf( "Updating link cost\n" );
                     leastCost[ y + 2 ] = receivedLeastCost[ x + 2 ];
                     leastCost[ y + 1 ] = interfaceToRouter;
                 }
