@@ -20,7 +20,7 @@ void updateTable( int [ ], int [ ], size_t, size_t );
 int main( int argc, char *argv[ ] )
 {
     int sockfd = 0, n = 0;
-    static int leastCost[ 10 ] = { 0, 1, 0, 1, 2 , 1, 3, 3, 2, 7 };
+    static int leastCost[ 10 ] = { 0, 1, 0, 1, 2, 1, 3, 3, 2, 7 };
     struct sockaddr_in serv_addr;
     
     if ( argc != 2 )
@@ -117,6 +117,17 @@ void displayTable( int leastCost[ ], size_t arraySize )
 void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSize, size_t receivedLeastCostSize )
 {
     printf( "Updating Router 0 Least Cost Table\n" );
+    int interfaceToRouter = 0;
+    
+    // Find interface to received router
+    for ( int z = 1; z < ( leastCostSize / sizeof( int ) ) -1 ; z+= 3 )
+    {
+        if ( leastCost[ z ] == receivedLeastCost[ 0 ] )
+        {
+            interfaceToRouter = leastCost[ z + 1 ];
+            break;
+        }
+    }
     
     for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 3 )
     {
@@ -127,6 +138,7 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
                 if ( receivedLeastCost[ x + 2 ] < leastCost[ y + 2 ] )
                 {
                     leastCost[ y + 2 ] = receivedLeastCost[ x + 2 ];
+                    leastCost[ y + 1 ] = interfaceToRouter;
                 }
             }
         }
