@@ -87,17 +87,17 @@ int main( int argc, char *argv[ ] )
 void displayTable( int leastCost[ ], size_t arraySize  )
 {
     printf( "Router 1 Destination Router\t\tLink Cost\n" );
-    printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
+    printf( "%d\t\t\t\t\t0\n", leastCost[ 0 ] );
     for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
     {
         
         if ( leastCost[ x + 1 ] == 665 )
         {
-            printf( "%d\t\t\t\tunknown\n", leastCost[ x ] );
+            printf( "%d\t\t\t\t\tunknown\n", leastCost[ x ] );
         }
         else
         {
-            printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+            printf( "%d\t\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
         }
     }
     
