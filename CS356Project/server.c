@@ -84,20 +84,20 @@ int main( int argc, char *argv[ ] )
     }
 }
 
-void displayTable( int leastCost[ ], size_t arraySize  )
+void displayTable( int leastCost[ ], size_t arraySize )
 {
-    printf( "Router 1 Destination Router\t\tLink Cost\n" );
-    printf( "%d\t\t\t\t\t0\n", leastCost[ 0 ] );
-    for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
+    
+    printf( "Router 1 Destination Router\t\tInterface\t\tLink Cost\n" );
+    printf( "%d\t\t\t\t\tLocal\t\t0\n", leastCost[ 0 ] );
+    for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 3 )
     {
-        
         if ( leastCost[ x + 1 ] == 665 )
         {
-            printf( "%d\t\t\t\t\tunknown\n", leastCost[ x ] );
+            printf( "%d\t\t\t\t\tunknown\t\tunknown\n", leastCost[ x ] );
         }
         else
         {
-            printf( "%d\t\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+            printf( "%d\t\t\t\t\t%d\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ], leastCost[ x + 2 ] );
         }
     }
     
@@ -107,15 +107,15 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
 {
     printf( "Updating Router 1 Least Cost Table\n" );
     
-    for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 2 )
+    for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 3 )
     {
-        for ( int y = 1; y < ( leastCostSize / sizeof( int ) ) - 1; y += 2 )
+        for ( int y = 1; y < ( leastCostSize / sizeof( int ) ) - 1; y += 3 )
         {
             if ( leastCost[ y ] == receivedLeastCost[ x ] )
             {
-                if ( receivedLeastCost[ x + 1 ] < leastCost[ y + 1 ] )
+                if ( receivedLeastCost[ x + 2 ] < leastCost[ y + 2 ] )
                 {
-                    leastCost[ y + 1 ] = receivedLeastCost[ x + 1 ];
+                    leastCost[ y + 2 ] = receivedLeastCost[ x + 2 ];
                 }
             }
         }
