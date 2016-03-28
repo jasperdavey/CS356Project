@@ -21,7 +21,7 @@ int main( int argc, char *argv[ ] )
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
-    static int leastCost[ 7 ] = { 1, 0, 1, 2, 1 };
+    static int leastCost[ 7 ] = { 1, 0, 1, 2, 1, 3, 665 };
     int receivedInt[ 7 ];
     
     listenfd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -87,7 +87,15 @@ void displayTable( int leastCost[ ], size_t arraySize  )
     printf( "%d\t\t\t\t0\n", leastCost[ 0 ] );
     for ( int x = 1; x < ( arraySize / sizeof( int ) ) - 1; x += 2 )
     {
-        printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+        
+        if ( leastCost[ x + 1 ] == 665 )
+        {
+            printf( "%d\t\t\t\tunknown\n", leastCost[ x ] );
+        }
+        else
+        {
+            printf( "%d\t\t\t\t%d\n", leastCost[ x ], leastCost[ x + 1 ] );
+        }
     }
     
 }
@@ -104,9 +112,7 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
             {
                 if ( receivedLeastCost[ x + 1 ] < leastCost[ y + 1 ] )
                 {
-                    printf( "Before assignment: leastCost=%d receivedLeastCost=%d\n", leastCost[ y + 1 ], receivedLeastCost[ x + 1 ] );
                     leastCost[ y + 1 ] = receivedLeastCost[ x + 1 ];
-                    printf( "After assignment: leastCost=%d\n", leastCost[ y + 1 ] );
                 }
             }
         }
