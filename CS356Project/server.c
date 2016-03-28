@@ -119,6 +119,8 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
         }
     }
     
+    printf( "I madee it past interface update\n" );
+    
     for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 3 )
     {
         for ( int y = 1; y < ( leastCostSize / sizeof( int ) ) - 1; y += 3 )
