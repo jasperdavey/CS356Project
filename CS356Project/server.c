@@ -54,8 +54,9 @@ int main( int argc, char *argv[ ] )
                 receivedArray[ x ] = ntohl( receivedInt[ x ] );
             }
             
-            displayTable( receivedArray, sizeof( receivedArray ) );
+            //displayTable( receivedArray, sizeof( receivedArray ) );
             updateTable( leastCost, receivedArray, sizeof( leastCost ), sizeof( receivedArray ) );
+        
             displayTable( leastCost, sizeof( leastCost ) );
             
             int sendLeastCost[ 5 ];
@@ -108,4 +109,6 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
             }
         }
     }
+    
+    displayTable( leastCost, leastCostSize );
 }

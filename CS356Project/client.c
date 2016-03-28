@@ -79,9 +79,8 @@ int main( int argc, char *argv[ ] )
         receivedInt[ x ] = ntohl( serverResponse[ x ] );
     }
     
-    displayTable( receivedInt, sizeof( receivedInt ) );
+    //displayTable( receivedInt, sizeof( receivedInt ) );
     updateTable( leastCost, receivedInt, sizeof( leastCost ), sizeof( receivedInt ) );
-    displayTable( leastCost, sizeof( leastCost ) );
     
     if ( n < 0 )
     {
@@ -120,4 +119,6 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
             }
         }
     }
+    
+    displayTable( leastCost, leastCostSize );
 }
