@@ -120,6 +120,8 @@ void updateTable( int leastCost[ ], int receivedLeastCost[ ], size_t leastCostSi
     }
     
     printf( "size of: %lu\n", receivedLeastCostSize / sizeof( int ) - 1 );
+    printf( "receivedLeastCostSize:%zu\n", receivedLeastCostSize );
+    printf( "size of int: %lu\n", sizeof( int ) );
     
     for ( int x = 1; x < ( receivedLeastCostSize / sizeof( int ) ) - 1; x += 3 )
     {
