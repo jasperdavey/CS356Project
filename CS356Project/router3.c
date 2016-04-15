@@ -1,4 +1,4 @@
-/*  server.c
+/*  Router3.c
  *  CS 356 Stage Three
  *  Author: Jasper Davey
  */
@@ -21,7 +21,7 @@ int main( int argc, char *argv[ ] )
 {
     int listenfd = 0, connfd = 0;
     struct sockaddr_in serv_addr;
-    static int leastCost[ 10 ] = { 1, 0, 2, 1, 2, 0, 1, 3, 665, 665 };
+    static int leastCost[ 10 ] = { 3, 0, 0, 7, 1, 665, 665, 2, 2, 2 };
     int receivedInt[ 10 ];
     
     listenfd = socket( AF_INET, SOCK_STREAM, 0 );
@@ -41,7 +41,7 @@ int main( int argc, char *argv[ ] )
         
         if ( connfd )
         {
-
+            
             if ( ( read( connfd, receivedInt, sizeof( receivedInt ) * sizeof( int ) ) ) < 0 )
             {
                 printf( "Error reading Least Cost Table\n" );
@@ -76,7 +76,7 @@ int main( int argc, char *argv[ ] )
                 return 1;
             }
             
-
+            
             
         }
         

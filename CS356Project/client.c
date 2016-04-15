@@ -1,5 +1,5 @@
 /*  client.c
- *  CS 356 Stage One
+ *  CS 356 Stage Three
  *  Author: Jasper Davey
  */
 
@@ -90,7 +90,57 @@ int main( int argc, char *argv[ ] )
     if ( n < 0 )
     {
         printf("\n Read error \n");
-    } 
+    }
+    
+    
+    // Router 2
+    if ( inet_pton( AF_INET, "10.0.2.15", &serv_addr.sin_addr ) <= 0 )
+    {
+        printf( "\n inet_pton error occured\n" );
+        return 1;
+    }
+    
+    if ( connect( sockfd, ( struct sockaddr * )&serv_addr, sizeof( serv_addr ) ) < 0 )
+    {
+        printf( "\n Error : Connect Failed \n" );
+        return 1;
+    }
+    
+    for ( int x = 0; x < sizeof( sendLeastCost ) / sizeof( int ); x++ )
+    {
+        sendLeastCost[ x ] = htonl( leastCost[ x ] );
+    }
+    
+    if ( send( sockfd, sendLeastCost, sizeof( sendLeastCost ) * sizeof( int ), 0 ) < 0 )
+    {
+        printf( "Sending of Least Cost Table failed\n" );
+        return 1;
+    }
+    
+    if ( ( read( sockfd, serverResponse, sizeof( receivedInt ) * sizeof( int ) ) )  < 0 )
+    {
+        printf( "Error receiving message from server\n" );
+        return 1;
+    }
+    
+    for ( int x = 0; x < sizeof( serverResponse ) / sizeof( int ); x ++ )
+    {
+        receivedInt[ x ] = ntohl( serverResponse[ x ] );
+    }
+    
+    printf( "Displaying initial least cost table\n" );
+    displayTable( leastCost, sizeof( leastCost ) );
+    
+    updateTable( leastCost, receivedInt, sizeof( leastCost ), sizeof( receivedInt ) );
+    
+    printf( "Displaying updated initial least cost table\n" );
+    displayTable( leastCost, sizeof( leastCost ) );
+    
+    if ( n < 0 )
+    {
+        printf("\n Read error \n");
+    }
+    
     
     return 0;
 }
